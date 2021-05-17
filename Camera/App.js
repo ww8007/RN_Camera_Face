@@ -5,7 +5,7 @@ import { Camera } from "expo-camera";
 export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
   const [set, onSet] = useState(true);
-  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [type, setType] = useState(Camera.Constants.Type.front);
   const [temp, setTemp] = useState(0.0);
   var ws = new WebSocket("ws://192.168.0.41:5000");
 
@@ -60,12 +60,12 @@ export default function App() {
             <Text style={styles.text}> Flip </Text>
           </TouchableOpacity>
           {temp < 37.0 ? (
-            <View style={styles.TextContainer}>
+            <View style={styles.normalContainer}>
               <Text style={styles.subText}>온도는 {temp} 입니다.</Text>
               <Text style={styles.subText}>정상입니다.</Text>
             </View>
           ) : (
-            <View style={styles.TextContainer}>
+            <View style={styles.redContainer}>
               <Text style={styles.subText}>온도는 {temp} 입니다.</Text>
               <Text style={styles.subText}>증상이 의심됩니다.</Text>
             </View>
@@ -88,10 +88,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "transparent",
   },
-  TextContainer: {
+  normalContainer: {
     flex: 1,
     flexDirection: "column",
     backgroundColor: "green",
+    alignContent: "center",
+    justifyContent: "center",
+  },
+  redContainer: {
+    flex: 1,
+    flexDirection: "column",
+    backgroundColor: "red",
     alignContent: "center",
     justifyContent: "center",
   },
