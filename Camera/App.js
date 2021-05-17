@@ -6,12 +6,34 @@ export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
   const [set, onSet] = useState(true);
   const [type, setType] = useState(Camera.Constants.Type.back);
+  const [temp, setTemp] = useState(0.0);
+  var ws = new WebSocket("ws://192.168.0.41:5000");
 
+  ws.onopen = () => {
+    // connection opened
+    ws.send("something"); // send a message
+  };
+
+  ws.onerror = (e) => {
+    // an error occurred
+    console.log("erroris", e.message);
+  };
+
+  ws.onclose = (e) => {
+    // connection closed
+    console.log(e.code, e.reason);
+  };
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestPermissionsAsync();
       setHasPermission(status === "granted");
     })();
+  }, []);
+  useEffect(() => {
+    ws.onmessage = (e) => {
+      // a message was received
+      setTemp(Math.floor(e.data * 100) / 100);
+    };
   }, []);
 
   if (hasPermission === null) {
@@ -27,17 +49,27 @@ export default function App() {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              onSet(!set);
+              console.log("hihi");
+              ws.onopen = () => {
+                // connection opened
+                ws.send("something"); // send a message
+                console.log("hihi");
+              };
             }}
           >
             <Text style={styles.text}> Flip </Text>
           </TouchableOpacity>
-          {set ? (
+          {temp < 37.0 ? (
             <View style={styles.TextContainer}>
-              <Text style={styles.subText}>온도는 37도 입니다.</Text>
+              <Text style={styles.subText}>온도는 {temp} 입니다.</Text>
               <Text style={styles.subText}>정상입니다.</Text>
             </View>
-          ) : null}
+          ) : (
+            <View style={styles.TextContainer}>
+              <Text style={styles.subText}>온도는 {temp} 입니다.</Text>
+              <Text style={styles.subText}>증상이 의심됩니다.</Text>
+            </View>
+          )}
         </View>
       </Camera>
     </View>
