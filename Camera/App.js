@@ -57,7 +57,7 @@ export default function App() {
               };
             }}
           >
-            <Text style={styles.text}> Flip </Text>
+            <View style={styles.Circle}></View>
           </TouchableOpacity>
           {temp < 37.0 ? (
             <View style={styles.normalContainer}>
@@ -77,6 +77,13 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  Circle: {
+    marginTop: 240,
+    width: 15,
+    height: 15,
+    backgroundColor: "red",
+    borderRadius: 150,
+  },
   container: {
     flex: 1,
   },
