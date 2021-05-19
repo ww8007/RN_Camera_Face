@@ -7,7 +7,7 @@ export default function App() {
   const [set, onSet] = useState(true);
   const [type, setType] = useState(Camera.Constants.Type.front);
   const [temp, setTemp] = useState(0.0);
-  var ws = new WebSocket("ws://192.168.0.41:5000");
+  var ws = new WebSocket("ws://192.168.0.69:5000");
 
   ws.onopen = () => {
     // connection opened
@@ -78,9 +78,9 @@ export default function App() {
 
 const styles = StyleSheet.create({
   Circle: {
-    marginTop: 240,
-    width: 15,
-    height: 15,
+    marginTop: 340,
+    width: 20,
+    height: 20,
     backgroundColor: "red",
     borderRadius: 150,
   },
