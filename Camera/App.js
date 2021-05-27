@@ -6,7 +6,7 @@ export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
   const [set, onSet] = useState(true);
   const [type, setType] = useState(Camera.Constants.Type.front);
-  const [temp, setTemp] = useState("");
+  const [temp, setTemp] = useState(0);
   const [text, setText] = useState("");
   var ws = new WebSocket("ws://192.168.0.69:5500");
 
@@ -22,9 +22,9 @@ export default function App() {
       // setTemp(Math.floor(e.data * 100) / 100);
       console.log(e.data);
       let array = e.data.split(",");
+      let temp = Math.floor(array[1] * 100) / 100;
       setText(array[0]); // temp 변수
-
-      setTemp(Math.floor(array[1] * 100) / 100);
+      setTemp((temp + 0.2).toFixed(2));
     };
   }, []);
 
@@ -52,11 +52,16 @@ export default function App() {
           {temp < 37.0 && text === "mask" ? (
             <View style={styles.normalContainer}>
               <Text style={styles.subText}>온도는 {temp} 입니다.</Text>
-              <Text style={styles.subText}>정상 입니다.</Text>
+              {temp > 34.8 && (
+                <Text style={styles.subText}>정상온도 입니다.</Text>
+              )}
             </View>
           ) : (
             <View style={styles.redContainer}>
-              <Text style={styles.subText}>온도는 {temp} 입니다.</Text>
+              <Text style={styles.subText}>온도가 37.5도 이상입니다.</Text>
+              <Text style={styles.subText}>
+                재측정 후 같은 온도라면 보건소를 방문해주세요.
+              </Text>
               {text === "no-mask" && (
                 <Text style={styles.subText}>마스크를 착용해주세요</Text>
               )}
