@@ -6,8 +6,8 @@ export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
   const [set, onSet] = useState(true);
   const [type, setType] = useState(Camera.Constants.Type.front);
-  const [temp, setTemp] = useState(0);
-  const [text, setText] = useState("");
+  const [temp, setTemp] = useState(35);
+  const [text, setText] = useState("mask");
   var ws = new WebSocket("ws://192.168.0.69:5500");
 
   useEffect(() => {
@@ -51,15 +51,20 @@ export default function App() {
           </TouchableOpacity>
           {temp < 37.0 && text === "mask" ? (
             <View style={styles.normalContainer}>
-              <Text style={styles.subText}>온도는 {temp} 입니다.</Text>
-              {temp > 34.8 && (
+              <Text style={styles.subText}>온도는 {temp}°C 입니다.</Text>
+              {/* {temp > 34.8 && (
                 <Text style={styles.subText}>정상온도 입니다.</Text>
+              )} */}
+              {text === "mask" && (
+                <Text style={styles.subText}>
+                  마스크를 착용을 확인 하였습니다.
+                </Text>
               )}
             </View>
           ) : (
             <View style={styles.redContainer}>
-              <Text style={styles.subText}>온도가 37.5도 이상입니다.</Text>
-              <Text style={styles.subText}>
+              <Text style={styles.subText}>온도가 37.5°C 이상입니다.</Text>
+              <Text style={styles.subsubText}>
                 재측정 후 같은 온도라면 보건소를 방문해주세요.
               </Text>
               {text === "no-mask" && (
@@ -109,6 +114,11 @@ const styles = StyleSheet.create({
   subText: {
     textAlign: "center",
     fontSize: 32,
+    color: "white",
+  },
+  subsubText: {
+    textAlign: "center",
+    fontSize: 25,
     color: "white",
   },
   button: {
