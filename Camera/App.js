@@ -6,14 +6,15 @@ export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
   const [set, onSet] = useState(true);
   const [type, setType] = useState(Camera.Constants.Type.front);
-  const [temp, setTemp] = useState(35);
-  const [text, setText] = useState('mask');
+  const [temp, setTemp] = useState(36.0);
+  const [text, setText] = useState('no-mask');
   var ws = new WebSocket('ws://192.168.0.69:5500');
 
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestPermissionsAsync();
       setHasPermission(status === 'granted');
+      6.0;
     })();
   }, []);
   useEffect(() => {
@@ -23,7 +24,7 @@ export default function App() {
       let array = e.data.split(',');
       let temp = Math.floor(array[1] * 100) / 100;
       setText(array[0]); // temp 변수
-      setTemp((temp + 0.2).toFixed(2));
+      setTemp(temp.toFixed(2));
     };
   }, []);
 
@@ -40,28 +41,50 @@ export default function App() {
           <TouchableOpacity style={styles.button}>
             <View style={styles.Circle}></View>
           </TouchableOpacity>
-          {temp < 37.0 && text === 'mask' ? (
+          {text === 'Not-Detected' && null}
+          {temp > 35.5 && temp < 37.0 && text === 'mask' && (
             <View style={styles.normalContainer}>
               <Text style={styles.subText}>온도는 {temp}°C 입니다.</Text>
-              {/* {temp > 34.8 && (
-                <Text style={styles.subText}>정상온도 입니다.</Text>
-              )} */}
               {text === 'mask' && (
                 <Text style={styles.subText}>
                   마스크를 착용을 확인 하였습니다.
                 </Text>
               )}
-            </View>
-          ) : (
-            <View style={styles.redContainer}>
-              <Text style={styles.subText}>온도가 37.5°C 이상입니다.</Text>
-              <Text style={styles.subsubText}>
-                재측정 후 같은 온도라면 보건소를 방문해주세요.
-              </Text>
               {text === 'no-mask' && (
-                <Text style={styles.subText}>마스크를 착용해주세요</Text>
+                <Text style={styles.subText}>마스크를 착용해주세요.</Text>
               )}
             </View>
+          )}
+          {temp > 35.5 && temp < 37.0 && text === 'no-mask' && (
+            <View style={styles.redContainer}>
+              <Text style={styles.subText}>온도는 {temp}°C 입니다.</Text>
+              {text === 'mask' && (
+                <Text style={styles.subText}>
+                  마스크를 착용을 확인 하였습니다.
+                </Text>
+              )}
+              {text === 'no-mask' && (
+                <Text style={styles.subText}>마스크를 착용해주세요.</Text>
+              )}
+            </View>
+          )}
+          {temp > 37.0 && (
+            <>
+              <View style={styles.redContainer}>
+                <Text style={styles.subText}>온도가 37.5°C 이상입니다.</Text>
+                <Text style={styles.subsubText}>
+                  재측정 후 같은 온도라면 보건소를 방문해주세요.
+                </Text>
+                {text === 'mask' && (
+                  <Text style={styles.subText}>
+                    마스크를 착용을 확인 하였습니다.
+                  </Text>
+                )}
+                {text === 'no-mask' && (
+                  <Text style={styles.subText}>마스크를 착용해주세요.</Text>
+                )}
+              </View>
+            </>
           )}
         </View>
       </Camera>
