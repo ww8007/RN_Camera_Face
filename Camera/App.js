@@ -4,7 +4,6 @@ import { Camera } from 'expo-camera';
 
 export default function App() {
 	const [hasPermission, setHasPermission] = useState(null);
-	const [set, onSet] = useState(true);
 	const [type, setType] = useState(Camera.Constants.Type.front);
 	const [temp, setTemp] = useState(36.0);
 	const [text, setText] = useState('no-mask');
@@ -19,8 +18,6 @@ export default function App() {
 	}, []);
 	useEffect(() => {
 		ws.onmessage = (e) => {
-			// a message was received
-			// setTemp(Math.floor(e.data * 100) / 100);
 			let array = e.data.split(',');
 			let temp = Math.floor(array[1] * 100) / 100;
 			setText(array[0]); // temp 변수
@@ -43,7 +40,6 @@ export default function App() {
 						<View style={styles.Circle}></View>
 					</TouchableOpacity>
 					{text === 'Not-Detected' && null}
-					{console.log(temp)}
 					{temp < 37.5 && temp > 30.0 && text === 'mask' && (
 						<View style={styles.normalContainer}>
 							<Text style={styles.subText}>온도는 {temp}°C 입니다.</Text>
